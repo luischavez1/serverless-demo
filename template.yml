@@ -1,0 +1,43 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Local SAM template for testing CDK Lambda functions (DEMO PURPOSES ONLY)
+
+Resources:
+  CreateOrderFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: createOrder.handler
+      Runtime: nodejs18.x
+      CodeUri: lambda/orders/
+      Events:
+        CreateOrderApi:
+          Type: Api
+          Properties:
+            Path: /orders
+            Method: post
+
+  GetOrdersFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: getOrders.handler
+      Runtime: nodejs18.x
+      CodeUri: lambda/orders/
+      Events:
+        GetOrdersApi:
+          Type: Api
+          Properties:
+            Path: /orders
+            Method: get
+
+  GetPaymentsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: getPayments.handler
+      Runtime: nodejs18.x
+      CodeUri: lambda/payments/
+      Events:
+        GetPaymentsApi:
+          Type: Api
+          Properties:
+            Path: /payments
+            Method: get
