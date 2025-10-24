@@ -5,17 +5,27 @@ import { AuthStack } from '../lib/auth-stack';
 import { OrdersStack } from '../lib/orders-stack';
 import { ApiGatewayStack } from '../lib/api-gateway-stack';
 import { PaymentsStack } from '../lib/payments-stack';
+import 'dotenv/config';
 
 const app = new cdk.App();
+const env = {
+  account: process.env.CDK_DEFAULT_ACCOUNT,
+  region: process.env.CDK_DEFAULT_REGION,
+};
 
-const auth = new AuthStack(app, 'AuthStack');
-const orders = new OrdersStack(app, 'OrdersStack');
-const payments = new PaymentsStack(app, 'PaymentsStack');
+const authStack = new AuthStack(app, 'AuthStack', { env });
+const ordersStack = new OrdersStack(app, 'OrdersStack', { env });
+const paymentsStack = new PaymentsStack(app, 'PaymentsStack', { env });
 
-// API Gateway depends on Cognito + services
-new ApiGatewayStack(app, 'ApiGatewayStack', {
-  userPool: auth.userPool,
-  createOrderHandler: orders.createOrderHandler,
-  getOrdersHandler: orders.getOrdersHandler,
-  paymentHandler: payments.handler,
+const apiGatewayStack = new ApiGatewayStack(app, 'ApiGatewayStack', {
+  userPoolArn: authStack.userPool.userPoolArn,
+  userPool: authStack.userPool,
+  createOrderHandler: ordersStack.createOrderHandler,
+  getOrdersHandler: ordersStack.getOrdersHandler,
+  paymentHandler: paymentsStack.handler,
+  env,
 });
+
+apiGatewayStack.addDependency(authStack);
+apiGatewayStack.addDependency(ordersStack);
+apiGatewayStack.addDependency(paymentsStack);

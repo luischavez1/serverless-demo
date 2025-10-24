@@ -3,7 +3,8 @@ import * as apigateway from 'aws-cdk-lib/aws-apigateway';
 import * as cognito from 'aws-cdk-lib/aws-cognito';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 
-interface ApiGatewayStackProps extends cdk.StackProps {
+export interface ApiGatewayStackProps extends cdk.StackProps {
+  userPoolArn: string;
   userPool: cognito.UserPool;
   createOrderHandler: lambda.IFunction;
   getOrdersHandler: lambda.IFunction;
@@ -32,7 +33,7 @@ export class ApiGatewayStack extends cdk.Stack {
       authorizer,
       authorizationType: apigateway.AuthorizationType.COGNITO,
     });
-    
+
     // Payments
     const payments = api.root.addResource('payments');
     payments.addMethod('GET', new apigateway.LambdaIntegration(props.paymentHandler), {

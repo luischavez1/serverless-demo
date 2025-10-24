@@ -1,11 +1,13 @@
 import * as cdk from 'aws-cdk-lib';
 import * as cognito from 'aws-cdk-lib/aws-cognito';
 
+export interface AuthStackProps extends cdk.StackProps {}
+
 export class AuthStack extends cdk.Stack {
   public readonly userPool: cognito.UserPool;
   public readonly client: cognito.UserPoolClient;
 
-  constructor(scope: cdk.App, id: string, props?: cdk.StackProps) {
+  constructor(scope: cdk.App, id: string, props?: AuthStackProps) {
     super(scope, id, props);
 
     this.userPool = new cognito.UserPool(this, 'UserPool', {
