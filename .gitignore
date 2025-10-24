@@ -10,3 +10,9 @@ cdk.out
 # Sam default build directory
 .aws-sam/
 
+# Local .env files
+.env
+
+# .idea folder
+.idea/
+
